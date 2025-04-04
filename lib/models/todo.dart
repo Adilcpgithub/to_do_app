@@ -27,10 +27,10 @@ class Todo {
   //! Create a Todo object from Firestore document snapshot
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      dueDate: DateTime.parse(json['dueDate']),
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      dueDate: DateTime.parse(json['dueDate'] ?? DateTime.now()),
       isCompleted: json['isCompleted'] ?? false,
     );
   }

@@ -1,16 +1,20 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_app/models/todo.dart';
 import 'package:to_do_app/utils/colors.dart';
+import 'package:to_do_app/viewmodels/todo_view_model.dart';
+import 'package:to_do_app/widgets/todo_item.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool isCompleted = true;
+    final viewModel = Provider.of<TodoViewModel>(context);
+    HomeScreenWidgets homeScreenWidgets = HomeScreenWidgets();
+    TextEditingController addTodoController = TextEditingController();
     return Scaffold(
       backgroundColor: AppColors.onSurfaceColor,
       body: SingleChildScrollView(
@@ -19,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
           child: SizedBox(
-            height: double.maxFinite,
+            height: MediaQuery.of(context).size.height,
             child: Stack(
               children: [
                 Column(
@@ -43,24 +47,6 @@ class HomeScreen extends StatelessWidget {
                                       GestureDetector(
                                         onTap: () async {
                                           log('touched');
-                                          await FirebaseFirestore.instance
-                                              .collection('todos')
-                                              .add({
-                                                'title': "title",
-                                                'dueDate': "dueDate",
-                                                'createdAt':
-                                                    FieldValue.serverTimestamp(), // Timestamp
-                                              })
-                                              .then((DocumentReference doc) {
-                                                print(
-                                                  "Todo added with ID: ${doc.id}",
-                                                );
-                                              })
-                                              .catchError((error) {
-                                                print(
-                                                  "Error adding todo: $error",
-                                                );
-                                              });
                                         },
                                         child: Text(
                                           'Pending  ',
@@ -125,166 +111,30 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 25),
-                            //!Empty Todo List
-                            Padding(
-                              padding: const EdgeInsets.all(26.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border(
-                                    top: BorderSide(
-                                      width: 1,
-                                      color: AppColors.text2,
-                                    ),
+                            viewModel.isLoading
+                                ? homeScreenWidgets
+                                    .showCircularProgressIndicator()
+                                : viewModel.error != null
+                                ? Center(
+                                  child: Text(
+                                    'Error ${viewModel.error}',
+                                    style: TextStyle(color: Colors.amber),
                                   ),
+                                )
+                                : homeScreenWidgets.toDoContainer(
+                                  todos: viewModel.dotos,
+                                  onDelete: (id) {
+                                    log('delete touched $id');
+                                    viewModel.deleteTodo(id);
+                                  },
+                                  onEdit: (todo) {
+                                    log('edit touched $todo');
+                                  },
+                                  toggleButton: (todo) {
+                                    log('toggele touched $todo');
+                                    viewModel.toggleCompleted(todo);
+                                  },
                                 ),
-                                height: 250,
-
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'asset/Clipboard.png',
-                                      height: 80,
-                                    ),
-                                    Text(
-                                      'You don’t have any tasks yet.',
-                                      style: TextStyle(
-                                        color: AppColors.text2,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Start adding tasks and manage your',
-                                          style: TextStyle(
-                                            color: AppColors.text2,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            ' time effectively.',
-                                            style: TextStyle(
-                                              color: AppColors.text2,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            //! To Do container
-                            // SizedBox(
-                            //   height: 450,
-                            //   child: ListView.builder(
-                            //     padding: EdgeInsets.all(25),
-                            //     itemBuilder: (context, index) {
-                            //       return Stack(
-                            //         children: [
-                            //           Padding(
-                            //             padding: const EdgeInsets.symmetric(
-                            //               vertical: 5,
-                            //             ),
-                            //             child: Container(
-                            //               height: 80,
-                            //               width: 370,
-                            //               decoration: BoxDecoration(
-                            //                 color: AppColors.darkGrey,
-                            //                 borderRadius: BorderRadius.circular(
-                            //                   4,
-                            //                 ),
-                            //               ),
-                            //               child: Center(
-                            //                 child: Row(
-                            //                   children: [
-                            //                     SizedBox(width: 15),
-                            //                     SizedBox(
-                            //                       width: 200,
-                            //                       child: Row(
-                            //                         children: [
-                            //                           SvgPicture.asset(
-                            //                             isCompleted == true
-                            //                                 ? 'asset/Ellipse 15.svg'
-                            //                                 : 'asset/Layer 1.svg',
-                            //                             height:
-                            //                                 isCompleted == true
-                            //                                     ? 20
-                            //                                     : 21,
-                            //                           ),
-                            //                           SizedBox(width: 10),
-                            //                           Expanded(
-                            //                             child: Text(
-                            //                               'Do Math HomeWork',
-                            //                               maxLines: 1,
-                            //                               overflow:
-                            //                                   TextOverflow
-                            //                                       .ellipsis,
-                            //                               style: TextStyle(
-                            //                                 decoration:
-                            //                                     TextDecoration
-                            //                                         .lineThrough,
-                            //                                 decorationThickness:
-                            //                                     1.5,
-                            //                                 decorationColor:
-                            //                                     AppColors.text2,
-                            //                                 color:
-                            //                                     AppColors.text2,
-                            //                               ),
-                            //                             ),
-                            //                           ),
-                            //                         ],
-                            //                       ),
-                            //                     ),
-                            //                   ],
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ),
-                            //           //! Edit and Delete button
-                            //           Positioned(
-                            //             right: 10,
-                            //             bottom: 10,
-                            //             top: 10,
-                            //             child: Row(
-                            //               mainAxisSize: MainAxisSize.min,
-                            //               children: [
-                            //                 IconButton(
-                            //                   onPressed: () {},
-                            //                   icon: SvgPicture.asset(
-                            //                     'asset/edit-2.svg',
-                            //                     height: 18,
-                            //                   ),
-                            //                 ),
-                            //                 IconButton(
-                            //                   onPressed: () {},
-                            //                   icon: SvgPicture.asset(
-                            //                     'asset/trash.svg',
-                            //                     height: 24,
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       );
-                            //     },
-                            //     itemCount: 5,
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -306,10 +156,8 @@ class HomeScreen extends StatelessWidget {
                       width: 70,
                       decoration: BoxDecoration(
                         color: AppColors.darkGrey,
-                        // Background color
-                        borderRadius: BorderRadius.circular(
-                          8,
-                        ), // Rounded corners
+
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
                         child: Padding(
@@ -346,7 +194,12 @@ class HomeScreen extends StatelessWidget {
 
                   top: 220,
                   child: GestureDetector(
-                    onTap: () => addTask(context),
+                    onTap:
+                        () => addTask(
+                          context: context,
+                          addTodoController: addTodoController,
+                          viewModel: viewModel,
+                        ),
                     child: Container(
                       height: 60,
                       width: 95,
@@ -381,7 +234,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 //! Add Task Bottom sheet
-addTask(BuildContext context) {
+addTask({
+  required BuildContext context,
+  required TextEditingController addTodoController,
+  required TodoViewModel viewModel,
+}) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -421,6 +278,7 @@ addTask(BuildContext context) {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextFormField(
+                    controller: addTodoController,
                     style: TextStyle(color: AppColors.text2),
                     decoration: InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -463,7 +321,19 @@ addTask(BuildContext context) {
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        addTodoController.text;
+                        viewModel.addTodo(
+                          Todo(
+                            id: '',
+                            title: addTodoController.text,
+                            description: '',
+                            dueDate: DateTime.now(),
+                            isCompleted: false,
+                          ),
+                        );
+                        Navigator.pop(context);
+                      },
                       icon: SvgPicture.asset('asset/send.svg', height: 24),
                     ),
                   ),
