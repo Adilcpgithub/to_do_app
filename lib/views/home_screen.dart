@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
     final viewModel = Provider.of<TodoViewModel>(context);
     HomeScreenWidgets homeScreenWidgets = HomeScreenWidgets();
     TextEditingController addTodoController = TextEditingController();
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: AppColors.onSurfaceColor,
       body: SingleChildScrollView(
@@ -35,103 +36,23 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             SizedBox(height: 100),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //!Pending and Completed
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          log('touched');
-                                        },
-                                        child: Text(
-                                          'Pending  ',
-                                          style: TextStyle(
-                                            color: AppColors.primaryColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.darkGrey,
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          '1',
-                                          style: TextStyle(
-                                            color: AppColors.text1,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Completed  ',
-                                        style: TextStyle(
-                                          color: AppColors.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.darkGrey,
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          '2/2',
-                                          style: TextStyle(
-                                            color: AppColors.text1,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            //!Pending and Completed
+                            homeScreenWidgets.pendingAndCompleteContainer(
+                              viewModel,
                             ),
                             SizedBox(height: 25),
                             viewModel.isLoading
                                 ? homeScreenWidgets
                                     .showCircularProgressIndicator()
                                 : viewModel.error != null
-                                ? Center(
-                                  child: Text(
-                                    'Error ${viewModel.error}',
-                                    style: TextStyle(color: Colors.amber),
-                                  ),
-                                )
+                                ? homeScreenWidgets.errorText(viewModel)
                                 : homeScreenWidgets.toDoContainer(
-                                  todos: viewModel.dotos,
+                                  todos: viewModel.todos,
                                   onDelete: (id) {
-                                    log('delete touched $id');
                                     viewModel.deleteTodo(id);
                                   },
-                                  onEdit: (todo) {
-                                    log('edit touched $todo');
-                                  },
+                                  onEdit: (todo) {},
                                   toggleButton: (todo) {
-                                    log('toggele touched $todo');
                                     viewModel.toggleCompleted(todo);
                                   },
                                 ),
@@ -195,10 +116,11 @@ class HomeScreen extends StatelessWidget {
                   top: 220,
                   child: GestureDetector(
                     onTap:
-                        () => addTask(
+                        () => addTaskButton(
                           context: context,
                           addTodoController: addTodoController,
                           viewModel: viewModel,
+                          formKey: _formKey,
                         ),
                     child: Container(
                       height: 60,
@@ -234,10 +156,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 //! Add Task Bottom sheet
-addTask({
+addTaskButton({
   required BuildContext context,
   required TextEditingController addTodoController,
   required TodoViewModel viewModel,
+  required GlobalKey<FormState> formKey,
 }) {
   return showModalBottomSheet(
     isScrollControlled: true,
@@ -249,7 +172,7 @@ addTask({
         ),
         child: SingleChildScrollView(
           child: Container(
-            height: 240,
+            height: 260,
             width: double.maxFinite,
 
             decoration: BoxDecoration(
@@ -277,40 +200,51 @@ addTask({
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextFormField(
-                    controller: addTodoController,
-                    style: TextStyle(color: AppColors.text2),
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelStyle: TextStyle(color: AppColors.text2),
-                      labelText: "eg :Do math homework",
+                  child: Form(
+                    key: formKey,
 
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: AppColors.text2,
+                    child: TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Title cannot be emptpy';
+                        }
+                        return null;
+                      },
+                      controller: addTodoController,
+                      style: TextStyle(color: AppColors.text2),
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelStyle: TextStyle(color: AppColors.text2),
+                        labelText: "eg :Do math homework",
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.text2,
+                          ),
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: AppColors.text2,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.text2,
+                          ),
                         ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: AppColors.text2,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.text2,
+                          ),
                         ),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: AppColors.text2,
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.text2,
+                          ),
                         ),
                       ),
                     ),
@@ -322,17 +256,20 @@ addTask({
                     alignment: Alignment.bottomRight,
                     child: IconButton(
                       onPressed: () {
-                        addTodoController.text;
-                        viewModel.addTodo(
-                          Todo(
-                            id: '',
-                            title: addTodoController.text,
-                            description: '',
-                            dueDate: DateTime.now(),
-                            isCompleted: false,
-                          ),
-                        );
-                        Navigator.pop(context);
+                        if (formKey.currentState!.validate()) {
+                          viewModel.addTodo(
+                            Todo(
+                              id: '',
+                              title: addTodoController.text,
+                              description: '',
+                              dueDate: DateTime.now(),
+                              isCompleted: false,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        } else {
+                          log('Validation failed');
+                        }
                       },
                       icon: SvgPicture.asset('asset/send.svg', height: 24),
                     ),

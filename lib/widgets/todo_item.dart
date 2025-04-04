@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:to_do_app/models/todo.dart';
 import 'package:to_do_app/utils/colors.dart';
+import 'package:to_do_app/viewmodels/todo_view_model.dart';
 
 class HomeScreenWidgets {
   //! To Do container
@@ -49,7 +50,7 @@ class HomeScreenWidgets {
                                     !todo.isCompleted == true
                                         ? 'asset/Ellipse 15.svg'
                                         : 'asset/Layer 1.svg',
-                                    height: todo.isCompleted == true ? 20 : 21,
+                                    height: 20,
                                   ),
                                 ),
                                 SizedBox(width: 10),
@@ -165,6 +166,79 @@ class HomeScreenWidgets {
     return SizedBox(
       height: 250,
       child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  //!Pending and Completed
+  Widget pendingAndCompleteContainer(TodoViewModel viewModel) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  log('touched');
+                },
+                child: Text(
+                  'Pending  ',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.darkGrey,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Text(
+                  viewModel.pendingTodos(),
+                  style: TextStyle(color: AppColors.text1),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                'Completed  ',
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.darkGrey,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Text(
+                  '${viewModel.completedTodos()}/${viewModel.todosCount}',
+                  style: TextStyle(color: AppColors.text1),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  //!  Error Text
+  Widget errorText(TodoViewModel viewModel) {
+    return Center(
+      child: Text(
+        'Error ${viewModel.error}',
+        style: TextStyle(color: Colors.amber),
+      ),
     );
   }
 }

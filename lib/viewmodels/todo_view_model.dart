@@ -7,9 +7,23 @@ class TodoViewModel extends ChangeNotifier {
   List<Todo> _todos = [];
   bool _isLoading = false;
   String? _error;
-  List<Todo> get dotos => _todos;
+  List<Todo> get todos => _todos;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  String get todosCount => _todos.length.toString();
+  String pendingTodos() {
+    int count = 0;
+    for (var i in _todos) {
+      if (i.isCompleted == false) {
+        count++;
+      }
+    }
+    return count.toString();
+  }
+
+  String completedTodos() {
+    return (todos.length - int.parse(pendingTodos())).toString();
+  }
 
   //! Load Todos
   Future<void> loadTodos() async {
@@ -46,8 +60,20 @@ class TodoViewModel extends ChangeNotifier {
 
   //!  Toggle Completion
   Future<void> toggleCompleted(Todo todo) async {
-    final updated = todo..isCompleted = !todo.isCompleted;
-    await _firebaseService.toggleCompleted(updated.id, updated.isCompleted);
-    await loadTodos();
+    final index = _todos.indexWhere((t) => t.id == todo.id);
+    if (index != -1) {
+      _todos[index] = Todo(
+        id: todo.id,
+        title: todo.title,
+        description: todo.description,
+        dueDate: todo.dueDate,
+        isCompleted: !todo.isCompleted,
+      );
+      notifyListeners();
+      await _firebaseService.toggleCompleted(
+        _todos[index].id,
+        _todos[index].isCompleted,
+      );
+    }
   }
 }

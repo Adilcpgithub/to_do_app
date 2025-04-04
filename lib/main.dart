@@ -4,6 +4,7 @@ import 'package:to_do_app/utils/colors.dart';
 import 'package:to_do_app/viewmodels/todo_view_model.dart';
 import 'package:to_do_app/views/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_app/views/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
         ),
-        home: HomeScreen(),
+        home: SplashScreen(),
       ),
     );
   }
