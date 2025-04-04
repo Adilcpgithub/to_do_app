@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:to_do_app/utils/colors.dart';
@@ -37,12 +40,35 @@ class HomeScreen extends StatelessWidget {
                                   //!Pending and Completed
                                   Row(
                                     children: [
-                                      Text(
-                                        'Pending  ',
-                                        style: TextStyle(
-                                          color: AppColors.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          log('touched');
+                                          await FirebaseFirestore.instance
+                                              .collection('todos')
+                                              .add({
+                                                'title': "title",
+                                                'dueDate': "dueDate",
+                                                'createdAt':
+                                                    FieldValue.serverTimestamp(), // Timestamp
+                                              })
+                                              .then((DocumentReference doc) {
+                                                print(
+                                                  "Todo added with ID: ${doc.id}",
+                                                );
+                                              })
+                                              .catchError((error) {
+                                                print(
+                                                  "Error adding todo: $error",
+                                                );
+                                              });
+                                        },
+                                        child: Text(
+                                          'Pending  ',
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                       Container(
@@ -303,11 +329,8 @@ class HomeScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
                               ),
-                              focusedBorder:
-                                  InputBorder.none, // No border when focused
-                              enabledBorder:
-                                  InputBorder
-                                      .none, // No border when not focused
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                             ),
                           ),
