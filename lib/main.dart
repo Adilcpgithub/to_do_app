@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/utils/colors.dart';
 import 'package:to_do_app/viewmodels/todo_view_model.dart';
-import 'package:to_do_app/views/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_app/views/splash_screen.dart';
 

@@ -10,7 +10,28 @@ class TodoViewModel extends ChangeNotifier {
   List<Todo> get todos => _todos;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  String _searchQuery = '';
+  String get searchQuery => _searchQuery;
+  //! Fetching search query
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  List<Todo> get filteredTodos {
+    if (_searchQuery.isEmpty) return _todos;
+    return _todos
+        .where(
+          (todo) =>
+              todo.title.toLowerCase().contains(_searchQuery.toLowerCase()),
+        )
+        .toList();
+  }
+
+  //! Total Todos count
   String get todosCount => _todos.length.toString();
+
+  // ! Pending  Todos Count
   String pendingTodos() {
     int count = 0;
     for (var i in _todos) {
@@ -21,6 +42,7 @@ class TodoViewModel extends ChangeNotifier {
     return count.toString();
   }
 
+  // ! completed Todos Count
   String completedTodos() {
     return (todos.length - int.parse(pendingTodos())).toString();
   }

@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: FadeInRight(
           duration: Duration(seconds: 1),
           child: Padding(
-            padding: const EdgeInsets.only(left: 70),
+            padding: const EdgeInsets.only(left: 80),
             child: SizedBox(
               height: 250,
               child: Lottie.asset('asset/Animation - 1743768042387.json'),
