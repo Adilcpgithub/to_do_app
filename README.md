@@ -14,7 +14,7 @@ https://user-images.githubusercontent.com/your-username/demo-video.mp4
 
 ## 📦 Download APK
 
-[⬇️ Download Latest APK](https://github.com/Adilcpgithub/to_do_app/releases/tag/v1.0.0)
+[⬇️ Download Latest APK](https://github.com/Adilcpgithub/to_do_app/releases)
 
 > _Click to download and try the app on any Android device._
 
@@ -45,9 +45,10 @@ https://user-images.githubusercontent.com/your-username/demo-video.mp4
 
 ## 📸 Screenshots
 
-| Home Screen        | Create Task        | Edit Task         |
-|--------------------|--------------------|-------------------|
-|![Splash Screen](asset/splash screen.jpg)![Home](asset/home.jpg) | ![Create](asset/addTodo screen.jpg) | ![Edit](asset/editTodo screen.jpg) |[Search](asset/search screen.jpg) |
+| Splash Screen        | Home Screen         | Create Task        | Edit Task         |
+|----------------------|---------------------|---------------------|-------------------|
+| ![Splash](asset/splash%20screen.jpg) | ![Home](asset/home.jpg) | ![Create](asset/addTodo%20screen.jpg) | ![Edit](asset/editTodo%20screen.jpg) |
+
 
 > _Place your screenshots inside a folder like `assets/screens/` and link accordingly._
 
