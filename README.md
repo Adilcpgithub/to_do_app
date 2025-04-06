@@ -48,7 +48,6 @@ https://youtu.be/I0hKNUpl4aw?si=hjCfJFpx7b9lH4lS
 | Splash Screen        | Home Screen         | Create Task        | Edit Task         |
 |----------------------|---------------------|---------------------|-------------------|
 | ![Splash](asset/splash%20screen.jpg) | ![Home](asset/home.jpg) | ![Create](asset/addTodo%20screen.jpg) | ![Edit](asset/editTodo%20screen.jpg) |
-
 ---
 
 
