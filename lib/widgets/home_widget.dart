@@ -396,187 +396,303 @@ class HomeScreenWidgets {
     required TodoViewModel viewModel,
     required GlobalKey<FormState> formKey,
   }) {
+    context.read<TodoViewModel>().clearDateAndTime();
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Container(
-              height: 300,
-              width: double.maxFinite,
-
-              decoration: BoxDecoration(
-                color: AppColors.darkGrey,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
+        return Consumer<TodoViewModel>(
+          builder: (context, value, child) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: Form(
-                key: formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: Text(
-                            'Add Task',
-                            style: TextStyle(
-                              color: AppColors.text1,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
+              child: SingleChildScrollView(
+                child: Container(
+                  height: 300,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    color: AppColors.darkGrey,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Form(
+                    key: formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Text(
+                                'Add Task',
+                                style: TextStyle(
+                                  color: AppColors.text1,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      //! Title Form Field
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Title cannot be emptpy';
-                            }
-                            return null;
-                          },
-                          textCapitalization: TextCapitalization.sentences,
-                          controller: titleController,
-                          style: TextStyle(
-                            color: AppColors.text1,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: TextStyle(color: AppColors.text2),
-                            labelText: "eg :Do math homework",
 
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
+                          // ! Title Field
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Title cannot be empty';
+                                }
+                                return null;
+                              },
+                              textCapitalization: TextCapitalization.sentences,
+                              controller: titleController,
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontWeight: FontWeight.w400,
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      sizedBoxCustom(10),
-                      //! Description Form Field
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                          textCapitalization: TextCapitalization.sentences,
-                          controller:
-                              descriptionController, // Make sure to define this controller
-                          style: TextStyle(
-                            color: AppColors.text1,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          minLines: 3,
-                          maxLines: 5,
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: TextStyle(color: AppColors.text2),
-                            labelText: "eg: Description of the task",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                viewModel.addTodo(
-                                  Todo(
-                                    id: '',
-                                    title: titleController.text,
-                                    description:
-                                        descriptionController.text.trim(),
-                                    dueDate: DateTime.now().add(
-                                      Duration(days: 1),
-                                    ),
-                                    isCompleted: false,
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelStyle: TextStyle(color: AppColors.text2),
+                                labelText: "eg :Do math homework",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
                                   ),
-                                );
-                                Navigator.pop(context);
-                              } else {
-                                log('Validation failed');
-                              }
-                            },
-                            icon: SvgPicture.asset(
-                              'asset/send.svg',
-                              height: 24,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          sizedBoxCustom(10),
+
+                          //! Description Field
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.sentences,
+                              controller: descriptionController,
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              minLines: 3,
+                              maxLines: 5,
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelStyle: TextStyle(color: AppColors.text2),
+                                labelText: "eg: Description of the task",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          //! Date Picker
+                          sizedBoxCustom(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: InkWell(
+                              onTap: () async {
+                                final picked = await showDatePicker(
+                                  context: context,
+                                  initialDate:
+                                      value.selectedDate ?? DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (picked != null) {
+                                  value.selectDate(picked);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.text2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_today,
+                                      color: AppColors.text2,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      value.selectedDate != null
+                                          ? '${value.selectedDate!.day}/${value.selectedDate!.month}/${value.selectedDate!.year}'
+                                          : 'Select Date',
+                                      style: TextStyle(
+                                        color: AppColors.text1,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // !Time Picker
+                          sizedBoxCustom(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: InkWell(
+                              onTap: () async {
+                                final picked = await showTimePicker(
+                                  context: context,
+                                  initialTime:
+                                      value.selectedTime ?? TimeOfDay.now(),
+                                );
+                                if (picked != null) {
+                                  value.selectTime(picked);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.text2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.access_time,
+                                      color: AppColors.text2,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      value.selectedTime != null
+                                          ? value.selectedTime!.format(context)
+                                          : 'Select Time',
+                                      style: TextStyle(
+                                        color: AppColors.text1,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          sizedBoxCustom(10),
+
+                          //! Submit Button
+                          Padding(
+                            padding: const EdgeInsets.all(25.0),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    value.addTodo(
+                                      Todo(
+                                        id: '',
+                                        title: titleController.text.trim(),
+                                        description:
+                                            descriptionController.text.trim(),
+                                        dueDate: DateTime(
+                                          value.selectedDate?.year ??
+                                              DateTime.now().year,
+                                          value.selectedDate?.month ??
+                                              DateTime.now().month,
+                                          value.selectedDate?.day ??
+                                              DateTime.now().day,
+                                          value.selectedTime?.hour ??
+                                              TimeOfDay.now().hour,
+                                          value.selectedTime?.minute ??
+                                              TimeOfDay.now().minute,
+                                        ),
+                                        isCompleted: false,
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  } else {
+                                    log('Validation failed');
+                                  }
+                                },
+                                icon: SvgPicture.asset(
+                                  'asset/send.svg',
+                                  height: 24,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          sizedBoxCustom(10),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -615,185 +731,305 @@ class HomeScreenWidgets {
   }) {
     editTitleController.text = todo.title;
     editDescriptionController.text = todo.description;
+    viewModel.selectDate(todo.dueDate);
+    viewModel.selectTime(
+      TimeOfDay(hour: todo.dueDate.hour, minute: todo.dueDate.minute),
+    );
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Container(
-              height: 300,
-              width: double.maxFinite,
-
-              decoration: BoxDecoration(
-                color: AppColors.darkGrey,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
+        return Consumer<TodoViewModel>(
+          builder: (context, value, child) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: Form(
-                key: formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: Text(
-                            'Edit Task',
-                            style: TextStyle(
-                              color: AppColors.text1,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      //! Title Form Field
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Title cannot be emptpy';
-                            }
-                            return null;
-                          },
-                          textCapitalization: TextCapitalization.sentences,
-                          controller: editTitleController,
-                          style: TextStyle(
-                            color: AppColors.text1,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: TextStyle(color: AppColors.text2),
-                            labelText: "eg :Do math homework",
+              child: SingleChildScrollView(
+                child: Container(
+                  height: 300,
+                  width: double.maxFinite,
 
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
+                  decoration: BoxDecoration(
+                    color: AppColors.darkGrey,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Form(
+                    key: formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Text(
+                                'Edit Task',
+                                style: TextStyle(
+                                  color: AppColors.text1,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      sizedBoxCustom(10),
-                      //! Description Form Field
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          //! Title Form Field
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Title cannot be emptpy';
+                                }
+                                return null;
+                              },
+                              textCapitalization: TextCapitalization.sentences,
+                              controller: editTitleController,
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelStyle: TextStyle(color: AppColors.text2),
+                                labelText: "eg :Do math homework",
 
-                          textCapitalization: TextCapitalization.sentences,
-                          controller:
-                              editDescriptionController, // Make sure to define this controller
-                          style: TextStyle(
-                            color: AppColors.text1,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          minLines: 3,
-                          maxLines: 5,
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: TextStyle(color: AppColors.text2),
-                            labelText: "eg: Description of the task",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.text2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                viewModel.updateTodo(
-                                  Todo(
-                                    id: todo.id,
-                                    title: editTitleController.text,
-                                    description:
-                                        editDescriptionController.text.trim(),
-                                    dueDate: todo.dueDate,
-                                    isCompleted: todo.isCompleted,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
                                   ),
-                                );
-                                Navigator.pop(context);
-                              } else {
-                                log('Validation failed');
-                              }
-                            },
-                            icon: SvgPicture.asset(
-                              'asset/send.svg',
-                              height: 24,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          sizedBoxCustom(10),
+                          //! Description Form Field
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+
+                              textCapitalization: TextCapitalization.sentences,
+                              controller:
+                                  editDescriptionController, // Make sure to define this controller
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              minLines: 3,
+                              maxLines: 5,
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelStyle: TextStyle(color: AppColors.text2),
+                                labelText: "eg: Description of the task",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.text2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          //! Date Picker
+                          sizedBoxCustom(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: InkWell(
+                              onTap: () async {
+                                final picked = await showDatePicker(
+                                  context: context,
+                                  initialDate:
+                                      value.selectedDate ?? DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (picked != null) {
+                                  value.selectDate(picked);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.text2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_today,
+                                      color: AppColors.text2,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      value.selectedDate != null
+                                          ? '${value.selectedDate!.day}/${value.selectedDate!.month}/${value.selectedDate!.year}'
+                                          : 'Select Date',
+                                      style: TextStyle(
+                                        color: AppColors.text1,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // !Time Picker
+                          sizedBoxCustom(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: InkWell(
+                              onTap: () async {
+                                final picked = await showTimePicker(
+                                  context: context,
+                                  initialTime:
+                                      value.selectedTime ?? TimeOfDay.now(),
+                                );
+                                if (picked != null) {
+                                  value.selectTime(picked);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.text2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.access_time,
+                                      color: AppColors.text2,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      value.selectedTime != null
+                                          ? value.selectedTime!.format(context)
+                                          : 'Select Time',
+                                      style: TextStyle(
+                                        color: AppColors.text1,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          sizedBoxCustom(10),
+
+                          //!  Submit Button
+                          Padding(
+                            padding: const EdgeInsets.all(25.0),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    value.updateTodo(
+                                      Todo(
+                                        id: todo.id,
+                                        title: editTitleController.text,
+                                        description:
+                                            editDescriptionController.text
+                                                .trim(),
+                                        dueDate: DateTime(
+                                          value.selectedDate?.year ??
+                                              DateTime.now().year,
+                                          value.selectedDate?.month ??
+                                              DateTime.now().month,
+                                          value.selectedDate?.day ??
+                                              DateTime.now().day,
+                                          value.selectedTime?.hour ??
+                                              TimeOfDay.now().hour,
+                                          value.selectedTime?.minute ??
+                                              TimeOfDay.now().minute,
+                                        ),
+                                        isCompleted: todo.isCompleted,
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  } else {
+                                    log('Validation failed');
+                                  }
+                                },
+                                icon: SvgPicture.asset(
+                                  'asset/send.svg',
+                                  height: 24,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );

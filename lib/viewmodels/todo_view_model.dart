@@ -12,6 +12,29 @@ class TodoViewModel extends ChangeNotifier {
   String? get error => _error;
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
+
+  //! DateTime Variables  functions
+  DateTime? _selectedDate;
+  DateTime? get selectedDate => _selectedDate;
+  void selectDate(DateTime pickedDate) {
+    _selectedDate = pickedDate;
+    notifyListeners();
+  }
+
+  //! Time varibles and functions
+  TimeOfDay? _selectedTime;
+  TimeOfDay? get selectedTime => _selectedTime;
+  void selectTime(TimeOfDay pickedTime) {
+    _selectedTime = pickedTime;
+    notifyListeners();
+  }
+
+  //! Clear Time and Date Fields
+  void clearDateAndTime() {
+    _selectedDate = null;
+    _selectedTime = null;
+  }
+
   //! Fetching search query
   void setSearchQuery(String query) {
     _searchQuery = query;

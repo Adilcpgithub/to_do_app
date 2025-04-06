@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
           return HomeScreen();
         },
       ),
+
       (route) => true,
     );
   }
