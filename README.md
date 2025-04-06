@@ -7,7 +7,7 @@ Stay organized, set deadlines, and never miss a task again!
 
 ## 📽️ Demo Video
 
-https://user-images.githubusercontent.com/your-username/demo-video.mp4  
+https://youtu.be/I0hKNUpl4aw?si=hjCfJFpx7b9lH4lS  
 > _(Click above or open in browser to watch the full app demo)_
 
 ---
@@ -48,9 +48,6 @@ https://user-images.githubusercontent.com/your-username/demo-video.mp4
 | Splash Screen        | Home Screen         | Create Task        | Edit Task         |
 |----------------------|---------------------|---------------------|-------------------|
 | ![Splash](asset/splash%20screen.jpg) | ![Home](asset/home.jpg) | ![Create](asset/addTodo%20screen.jpg) | ![Edit](asset/editTodo%20screen.jpg) |
-
-
-> _Place your screenshots inside a folder like `assets/screens/` and link accordingly._
 
 ---
 
