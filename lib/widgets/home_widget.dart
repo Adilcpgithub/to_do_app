@@ -684,7 +684,6 @@ class HomeScreenWidgets {
                             ),
                           ),
 
-                          sizedBoxCustom(10),
                           sizedBoxCustom(20),
                         ],
                       ),
