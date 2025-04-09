@@ -640,7 +640,8 @@ class HomeScreenWidgets {
                             ),
                           ),
 
-                          sizedBoxCustom(10),
+                          sizedBoxCustom(5),
+                          sizedBoxCustom(5),
 
                           //! Submit Button
                           Padding(
@@ -649,6 +650,7 @@ class HomeScreenWidgets {
                               alignment: Alignment.bottomRight,
                               child: IconButton(
                                 onPressed: () {
+                                  //! Validate the form
                                   if (formKey.currentState!.validate()) {
                                     value.addTodo(
                                       Todo(
